@@ -245,6 +245,7 @@ class main:
                 self.__redraw()
             elif (player_a is not None) and (ball_b is None) and (salah_a is not None):
                 ball_b.bounce_off_salah()
+                print("salah")
 
             self.__predict_ball(player_a)
             self.__predict_ball(ball_b)
