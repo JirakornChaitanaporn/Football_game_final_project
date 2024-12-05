@@ -1,8 +1,8 @@
-import Footballer
+import Object
 import Footballer_Database
 import turtle
 
-class FootballerPlayer(Footballer.Footballer):
+class FootballerPlayer(Object.Object):
     def __init__(self, salah_data, my_turtle):
         super().__init__("Liverpool", salah_data)
         self.speed = 5

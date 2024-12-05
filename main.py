@@ -1,13 +1,12 @@
 import Footballer_Database
 import turtle
 import FootballerPlayer
-import Footballer
+import Object
 import turtle
 import random
 import heapq
 import Event
 from Score import Score
-import Ball
 
 class main:
     def __init__(self):
@@ -15,9 +14,8 @@ class main:
         turtle.tracer(0)
         turtle.hideturtle()
         turtle.colormode(255)
-        self.player_list = []
-        self.ball = Ball.Ball(0,0,0,5,0)
-        self.ball_list = [self.ball]
+        self.ball = Object.Object(team= "Ball")
+        self.object_list = [self.ball]
         self.t = 0.0
         self.pq = []
         self.HZ = 4
@@ -30,18 +28,18 @@ class main:
         self.liverpool = Footballer_Database.Footballer_Database()
         self.mancity = Footballer_Database.Footballer_Database()
         for i in range(10):
-            liverpool_player = Footballer.Footballer("Liverpool", self.liverpool)
+            liverpool_player = Object.Object("Liverpool", self.liverpool)
             self.liverpool.add_footballer(liverpool_player)
-            liverpool_player.draw_footballer()
-            self.player_list.append(liverpool_player)
+            liverpool_player.draw()
+            self.object_list.append(liverpool_player)
             if liverpool_player.isGK:
                 self.lfc_gk = liverpool_player
 
         for i in range(11):
-            mancity_player = Footballer.Footballer("Man city", self.mancity)
+            mancity_player = Object.Object("Man city", self.mancity)
             self.mancity.add_footballer(mancity_player)
-            mancity_player.draw_footballer()
-            self.player_list.append(mancity_player)
+            mancity_player.draw()
+            self.object_list.append(mancity_player)
             if mancity_player.isGK:
                 self.mancity_gk = mancity_player
         
@@ -61,10 +59,10 @@ class main:
             return
 
         # particle-particle collisions
-        for i in range(len(self.player_list)):
-            dt = a_ball.time_to_hit(self.player_list[i])
+        for i in range(len(self.object_list)):
+            dt = a_ball.time_to_hit(self.object_list[i])
             # insert this event into pq
-            heapq.heappush(self.pq, Event.Event(self.t + dt, a_ball, self.player_list[i], None))
+            heapq.heappush(self.pq, Event.Event(self.t + dt, a_ball, self.object_list[i], None))
         
         # particle-wall collisions
         dtX = a_ball.time_to_hit_vertical_wall()
@@ -89,15 +87,15 @@ class main:
         self.my_salah.clear()
         self.__draw_border()
         self.my_salah.draw()
-        for i in range(len(self.player_list)):
-            self.player_list[i].draw_footballer()
+        for i in range(len(self.object_list)):
+            self.object_list[i].draw()
         self.ball.draw()
         turtle.update()
         heapq.heappush(self.pq, Event.Event(self.t + 1.0/self.HZ, None, None, None))
 
     def __salah_predict(self):
-        for i in range(len(self.ball_list)):
-            a_ball = self.ball_list[i]
+        for i in range(len(self.object_list)):
+            a_ball = self.object_list[i]
             dtP = a_ball.time_to_hit(self.my_salah)
             heapq.heappush(self.pq, Event.Event(self.t + dtP, a_ball, None, self.my_salah))
 
@@ -105,7 +103,7 @@ class main:
     def move_left(self):
         if (self.my_salah.location[0] - self.my_salah.width/2 - self.my_salah.speed) >= -self.canvas_width:
             self.my_salah.set_location([self.my_salah.location[0] - self.my_salah.speed, self.my_salah.location[1]])
-            for player in self.player_list:#make other player move along as salah is moving
+            for player in self.object_list:#make other player move along as salah is moving
                 if player.team == "Liverpool" and\
                     (self.my_salah.location[0] - self.my_salah.width/2 - 80) >= -self.canvas_width and\
                         (self.my_salah.location[0] + self.my_salah.width/2 + 220) <= self.canvas_width\
@@ -116,7 +114,7 @@ class main:
     def move_right(self):
         if (self.my_salah.location[0] + self.my_salah.width/2 + self.my_salah.speed) <= self.canvas_width:
             self.my_salah.set_location([self.my_salah.location[0] + self.my_salah.speed, self.my_salah.location[1]])
-            for player in self.player_list:#make other player move along as salah is moving
+            for player in self.object_list:#make other player move along as salah is moving
                 if player.team == "Liverpool" and\
                     (self.my_salah.location[0] + self.my_salah.width/2 + 200) <= self.canvas_width and\
                         (self.my_salah.location[0] - self.my_salah.width/2 - 100) >= -self.canvas_width\
@@ -126,7 +124,7 @@ class main:
     def move_up(self):
         if (self.my_salah.location[1] + self.my_salah.height/2 + 5) <= self.canvas_height:
             self.my_salah.set_location([self.my_salah.location[0], self.my_salah.location[1]+ 5])
-            for player in self.player_list:#make other player move along as salah is moving
+            for player in self.object_list:#make other player move along as salah is moving
                 if player.team == "Liverpool" and\
                     (self.my_salah.location[1] + self.my_salah.height/2 + 40) <= self.canvas_height and\
                     (self.my_salah.location[1] - self.my_salah.height/2 - 300) >= -self.canvas_height\
@@ -137,7 +135,7 @@ class main:
     def move_down(self):
         if (self.my_salah.location[1] - self.my_salah.height/2 - 5) >= -self.canvas_height:
             self.my_salah.set_location([self.my_salah.location[0], self.my_salah.location[1] - 5])
-            for player in self.player_list:#make other player move along as salah is moving
+            for player in self.object_list:#make other player move along as salah is moving
                 if player.team == "Liverpool" and\
                     (self.my_salah.location[1] - self.my_salah.height/2 - 300) >= -self.canvas_height and\
                     (self.my_salah.location[1] + self.my_salah.height/2 + 40) <= self.canvas_height\
@@ -171,11 +169,10 @@ class main:
                 self.mancity_pressing(player)
 
     def ball_movement(self):#for debugging only
-        self.ball.vx = random.randint(-5,5)
-        self.ball.vy = random.randint(-5,5)
+        self.ball.vy = -5
 
     def reset_pos(self):#occur when a goal is scored
-        for player in self.player_list:
+        for player in self.object_list:
             if player.team == "Liverpool":
                 if 2 <= player.pos <= 5:
                     player.x = 250
@@ -186,15 +183,15 @@ class main:
                 elif 9 <= player.pos <= 10:
                     player.x = 50
                     player.y = (self.canvas_height*(player.pos * (2/5))) - 1200
-        else:
-            if 2 <= player.pos <= 5:
-                player.x = -250
-                player.y = (self.canvas_height*(player.pos*(-11/30))) +400
-            elif 6 <= player.pos <= 8:
-                player.x = -150
-                player.y = (self.canvas_height*player.pos*(-1/3)) + 700
-            else:
-                player.x = -50
+            elif player.team == "Mancity":
+                if 2 <= player.pos <= 5:
+                    player.x = -250
+                    player.y = (self.canvas_height*(player.pos*(-11/30))) +400
+                elif 6 <= player.pos <= 8:
+                    player.x = -150
+                    player.y = (self.canvas_height*player.pos*(-1/3)) + 700
+                else:
+                    player.x = -50
                 player.y = (self.canvas_height*(player.pos * (2/5))) - 1200
         self.ball.x = 0
         self.ball.y = 0
@@ -203,7 +200,8 @@ class main:
 
     def run(self):
         # initialize pq with collision events and redraw event
-        self.__predict_ball(self.ball)
+        for i in range(len(self.object_list)):
+            self.__predict_ball(self.object_list[i])
         heapq.heappush(self.pq, Event.Event(0, None, None, None))
 
         # listen to keyboard events and activate move_left and move_right handlers accordingly
@@ -217,6 +215,7 @@ class main:
             e = heapq.heappop(self.pq)
             if not e.is_valid():
                 continue
+
             is_scored = False
             is_scored = self.score.do_score()
             if is_scored:
@@ -224,8 +223,8 @@ class main:
                 
             self.score.write_score()
 
-            player_a = e.a
-            ball_b = e.b
+            object_a = e.a
+            object_b = e.b
             salah_a = e.salah
 
             # update positions, and then simulation clock
@@ -233,22 +232,26 @@ class main:
             self.score.draw_goals()
 
             self.man_city_move()
-            # self.ball_movement()
+            self.ball_movement()
 
-            if (player_a is not None) and (ball_b is not None) and (salah_a is None):
-                ball_b.bounce_off(player_a)
-            elif (player_a is not None) and (ball_b is None) and (salah_a is None):
-                ball_b.bounce_off_vertical_wall()
-            elif (player_a is None) and (ball_b is not None) and (salah_a is None):
-                ball_b.bounce_off_horizontal_wall()
-            elif (player_a is None) and (ball_b is None) and (salah_a is None):
+            if (object_a is not None) and (object_b is not None) and (salah_a is None):
+                object_b.bounce_off(object_a)
+                print("bounce")
+            elif (object_a is not None) and (object_b is None) and (salah_a is None):
+                object_b.bounce_off_vertical_wall()
+                print("vertical")
+            elif (object_a is None) and (object_b is not None) and (salah_a is None):
+                object_b.bounce_off_horizontal_wall()
+                print("horizontal")
+            elif (object_a is None) and (object_b is None) and (salah_a is None):
                 self.__redraw()
-            elif (player_a is not None) and (ball_b is None) and (salah_a is not None):
-                ball_b.bounce_off_salah()
+                print("redraw")
+            elif (object_a is not None) and (object_b is None) and (salah_a is not None):
+                object_b.bounce_off_salah()
                 print("salah")
 
-            self.__predict_ball(player_a)
-            self.__predict_ball(ball_b)
+            self.__predict_ball(object_a)
+            self.__predict_ball(object_b)
 
             # regularly update the prediction for the paddle as its position may always be changing due to keyboard events
             self.__salah_predict()
