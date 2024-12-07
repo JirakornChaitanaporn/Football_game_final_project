@@ -62,13 +62,13 @@ class main:
         for i in range(len(self.object_list)):
             dt = a_ball.time_to_hit(self.object_list[i])
             # insert this event into pq
-            heapq.heappush(self.pq, Event.Event(self.t + dt, a_ball, self.object_list[i], None))
+            heapq.heappush(self.pq, Event.Event_ball_to_player(self.t + dt, a_ball, self.object_list[i], None))
         
         # particle-wall collisions
         dtX = a_ball.time_to_hit_vertical_wall()
         dtY = a_ball.time_to_hit_horizontal_wall()
-        heapq.heappush(self.pq, Event.Event(self.t + dtX, a_ball, None, None))
-        heapq.heappush(self.pq, Event.Event(self.t + dtY, None, a_ball, None))
+        heapq.heappush(self.pq, Event.Event_ball_to_player(self.t + dtX, a_ball, None, None))
+        heapq.heappush(self.pq, Event.Event_ball_to_player(self.t + dtY, None, a_ball, None))
     
     def __draw_border(self):
         turtle.penup()
@@ -91,13 +91,13 @@ class main:
             self.object_list[i].draw()
         self.ball.draw()
         turtle.update()
-        heapq.heappush(self.pq, Event.Event(self.t + 1.0/self.HZ, None, None, None))
+        heapq.heappush(self.pq, Event.Event_ball_to_player(self.t + 1.0/self.HZ, None, None, None))
 
     def __salah_predict(self):
         for i in range(len(self.object_list)):
             a_ball = self.object_list[i]
             dtP = a_ball.time_to_hit(self.my_salah)
-            heapq.heappush(self.pq, Event.Event(self.t + dtP, a_ball, None, self.my_salah))
+            heapq.heappush(self.pq, Event.Event_ball_to_player(self.t + dtP, a_ball, None, self.my_salah))
 
     # move_left and move_right handlers update paddle positions
     def move_left(self):
@@ -196,13 +196,14 @@ class main:
         self.ball.x = 0
         self.ball.y = 0
         self.my_salah.set_location([50,150])
+        self.pq.clear()
 
 
     def run(self):
         # initialize pq with collision events and redraw event
         for i in range(len(self.object_list)):
             self.__predict_ball(self.object_list[i])
-        heapq.heappush(self.pq, Event.Event(0, None, None, None))
+        heapq.heappush(self.pq, Event.Event_ball_to_player(0, None, None, None))
 
         # listen to keyboard events and activate move_left and move_right handlers accordingly
         self.screen.listen()
@@ -213,6 +214,8 @@ class main:
 
         while (True):
             e = heapq.heappop(self.pq)
+            # if e.time > 10:
+            #     self.pq.pop(0)
             if not e.is_valid():
                 continue
 
@@ -229,16 +232,18 @@ class main:
 
             # update positions, and then simulation clock
             self.ball.move(e.time - self.t)
+            self.t = e.time
             self.score.draw_goals()
 
             self.man_city_move()
             self.ball_movement()
+            print(e)
 
             if (object_a is not None) and (object_b is not None) and (salah_a is None):
                 object_b.bounce_off(object_a)
                 print("bounce")
             elif (object_a is not None) and (object_b is None) and (salah_a is None):
-                object_b.bounce_off_vertical_wall()
+                object_a.bounce_off_vertical_wall()
                 print("vertical")
             elif (object_a is None) and (object_b is not None) and (salah_a is None):
                 object_b.bounce_off_horizontal_wall()
@@ -247,8 +252,10 @@ class main:
                 self.__redraw()
                 print("redraw")
             elif (object_a is not None) and (object_b is None) and (salah_a is not None):
-                object_b.bounce_off_salah()
+                object_a.bounce_off_salah()
                 print("salah")
+            elif (object_a is None) and (object_b is not None) and (salah_a is not None):
+                object_b.bounce_off_salah()
 
             self.__predict_ball(object_a)
             self.__predict_ball(object_b)

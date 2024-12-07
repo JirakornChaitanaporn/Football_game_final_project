@@ -3,8 +3,7 @@ import Footballer_Database
 import turtle
 import math
 
-liverpool = Footballer_Database.Footballer_Database()
-opponent = Footballer_Database.Footballer_Database()
+
 
 class Object:
     def __init__(self, team, player_database = None):
@@ -98,12 +97,14 @@ class Object:
         return False
 
     def bounce_off_vertical_wall(self):
-        self.vx = -self.vx
-        self.count += 1
+        if self.team == "Ball":
+            self.vx = -self.vx
+            self.count += 1
 
     def bounce_off_horizontal_wall(self):
-        self.vy = -self.vy
-        self.count += 1
+        if self.team == "Ball":
+            self.vy = -self.vy
+            self.count += 1
 
     def bounce_off(self, that):
         dx  = that.x - self.x
@@ -221,5 +222,6 @@ class Object:
 
 
     def bounce_off_salah(self):
-        self.vy = -self.vy
-        self.vx = -self.vx
+        if self.team == "Ball":    
+            self.vy = -self.vy
+            self.vx = -self.vx
