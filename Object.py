@@ -6,10 +6,8 @@ import math
 
 
 class Object:
+    Object_list = []# class variable
     def __init__(self, team, player_database = None):
-        # team_list = ['Alison', 'Trent', 'Van_dilk', 'Konate', 'Andy', 'Sbo', 'Mac A', 'Jones', 'Nunez', 'diaz']
-        # name_i = random.randint(0,9)
-        # self._name = team_list[name_i]
         self.team = team
         self.canvas_width = turtle.screensize()[0]
         self.canvas_height = turtle.screensize()[1]
@@ -68,13 +66,14 @@ class Object:
             self.x = 0
             self.y = 0
             self.vx = 0
-            self.vy = 0
+            self.vy = -6
             self.color = (255, 255, 0)
-            self.mass = 100*self.size**2
+            self.mass = 120
             self.count = 0
             self.id = 0
 
         self.location = [self.x, self.y]
+        Object.Object_list.append(self)
             
     def draw(self):
         turtle.penup()
@@ -89,22 +88,24 @@ class Object:
 
     def is_in_goal(self, team):
         if team == "liverpool":
-            if self.x < -360 and -60 <= self.y <= 60:
+            if self.x < -350 and -60 <= self.y <= 60:
                 return True
         elif team == "man city":
-            if self.x < -360 and -60 <= self.y <= 60:
+            if self.x > 350 and -60 <= self.y <= 60:
                 return True
         return False
 
     def bounce_off_vertical_wall(self):
-        if self.team == "Ball":
-            self.vx = -self.vx
-            self.count += 1
+        for ball in Object.Object_list:
+            if ball.team == "Ball":
+                ball.vx = -ball.vx
+                ball.count += 1
 
     def bounce_off_horizontal_wall(self):
-        if self.team == "Ball":
-            self.vy = -self.vy
-            self.count += 1
+        for ball in Object.Object_list:
+            if ball.team == "Ball":
+                ball.vy = -ball.vy
+                ball.count += 1
 
     def bounce_off(self, that):
         dx  = that.x - self.x
@@ -126,14 +127,18 @@ class Object:
             self.vx += fx / self.mass
             self.vy += fy / self.mass
             self.count += 1
+        elif self.team == "Liverpool":
+            pass
+        elif self.team == "Man city":
+            pass
         if that.team == "Ball":
             that.vx -= fx / that.mass
             that.vy -= fy / that.mass
             that.count += 1
         
         # update collision counts
-        # self.count += 1
-        # that.count += 1
+        self.count += 1
+        that.count += 1
 
     def distance(self, that):
         x1 = self.x
@@ -193,7 +198,6 @@ class Object:
             return math.inf
 
     def time_to_hit_salah(self, object):
-    # Y-axis collision
         if (self.vy > 0) and ((self.y + self.size) > (object.location[1] - object.height / 2)):
             return math.inf
         if (self.vy < 0) and ((self.y - self.size) < (object.location[1] + object.height / 2)):
@@ -205,7 +209,6 @@ class Object:
         if paddle_left_edge - self.size <= self.x + (self.vx * dt_y) <= paddle_right_edge + self.size:
             return dt_y
 
-        # X-axis collision
         if (self.vx > 0) and ((self.x + self.size) > (object.location[0] - object.width / 2)):
             return math.inf
         if (self.vx < 0) and ((self.x - self.size) < (object.location[0] + object.width / 2)):

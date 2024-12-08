@@ -169,7 +169,8 @@ class main:
                 self.mancity_pressing(player)
 
     def ball_movement(self):#for debugging only
-        self.ball.vy = -5
+        # self.ball.vy = -6
+        pass
 
     def reset_pos(self):#occur when a goal is scored
         for player in self.object_list:
@@ -237,16 +238,24 @@ class main:
 
             self.man_city_move()
             self.ball_movement()
-            print(e)
+
 
             if (object_a is not None) and (object_b is not None) and (salah_a is None):
                 object_b.bounce_off(object_a)
                 print("bounce")
-            elif (object_a is not None) and (object_b is None) and (salah_a is None):
+            elif (self.ball.x >= 365 or self.ball.x <= -365)and (object_a is not None):
                 object_a.bounce_off_vertical_wall()
+                if self.ball.x >= 365:
+                    self.ball.x = 355
+                elif self.ball.x < -365:
+                    self.ball.x = -355
                 print("vertical")
-            elif (object_a is None) and (object_b is not None) and (salah_a is None):
+            elif (self.ball.y >= 280 or self.ball.y <= -280)and (object_b is not None):
                 object_b.bounce_off_horizontal_wall()
+                if self.ball.y >= 280:
+                    self.ball.y = 270
+                elif self.ball.y <= -280:
+                    self.ball.y = -270
                 print("horizontal")
             elif (object_a is None) and (object_b is None) and (salah_a is None):
                 self.__redraw()
