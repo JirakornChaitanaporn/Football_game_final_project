@@ -7,11 +7,11 @@ class FootballerPlayer(Object.Object):
         super().__init__("Liverpool", salah_data)
         self.speed = 5
         self._pos = 11
-        self.xpos = 50
-        self.ypos = 180
+        self.x = 50
+        self.y = 180
         self.width = 40
         self.height = 40
-        self.location = [self.xpos, self.ypos]
+        self.location = [self.x, self.y]
         self.screen = turtle.Screen()
         self.salah = my_turtle
         self.salah.penup()

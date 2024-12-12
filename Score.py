@@ -1,5 +1,4 @@
 import turtle
-import Ball
 
 class Score:
     def __init__(self, ball_):

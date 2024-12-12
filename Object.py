@@ -12,7 +12,7 @@ class Object:
         self.canvas_width = turtle.screensize()[0]
         self.canvas_height = turtle.screensize()[1]
         self.pos = 0
-        self.mass = 89
+        self.mass = 100
         self.x = 0
         self.y = 0
         self.count = 0
@@ -62,13 +62,13 @@ class Object:
                 self.x = -50
                 self.y = (self.canvas_height*(self.pos * (2/5))) - 1200
         else:
-            self.size = 5
+            self.size = 10
             self.x = 0
             self.y = 0
             self.vx = 0
             self.vy = -6
             self.color = (255, 255, 0)
-            self.mass = 120
+            self.mass = 100
             self.count = 0
             self.id = 0
 
@@ -127,10 +127,6 @@ class Object:
             self.vx += fx / self.mass
             self.vy += fy / self.mass
             self.count += 1
-        elif self.team == "Liverpool":
-            pass
-        elif self.team == "Man city":
-            pass
         if that.team == "Ball":
             that.vx -= fx / that.mass
             that.vy -= fy / that.mass
@@ -225,6 +221,6 @@ class Object:
 
 
     def bounce_off_salah(self):
-        if self.team == "Ball":    
-            self.vy = -self.vy
-            self.vx = -self.vx
+        Object.Object_list[0].vx = -Object.Object_list[0].vx
+        Object.Object_list[0].vy = -Object.Object_list[0].vy
+        print(f"{Object.Object_list[0].vx}    {Object.Object_list[0].vy}")
