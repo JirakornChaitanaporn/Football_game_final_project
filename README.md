@@ -44,3 +44,9 @@ Bug still to be resolved:
 * The game is lagged so much as the game process and event are happening.
 * Sometimes the ball does not collide with ball, but only deflect a little.
 * Sometimes ball cannnot sense that it is near Mohamed Salah
+
+
+Self evaluation:
+80/100
+This is because this game is only ball collide with players, multiple object.
+Moreover there are still unsolvable bug.
