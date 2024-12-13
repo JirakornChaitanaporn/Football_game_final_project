@@ -204,7 +204,7 @@ class main:
                     player.y = (self.canvas_height*(player.pos*(-11/30))) + 400
                 elif 6 <= player.pos <= 8:
                     player.x = 150
-                    self.y = (self.canvas_height*player.pos*(-1/3)) + 700
+                    player.y = (self.canvas_height*player.pos*(-1/3)) + 700
                 elif 9 <= player.pos <= 10:
                     player.x = 50
                     player.y = (self.canvas_height*(player.pos * (2/5))) - 1200
