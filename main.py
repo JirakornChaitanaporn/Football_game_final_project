@@ -220,6 +220,8 @@ class main:
                 player.y = (self.canvas_height*(player.pos * (2/5))) - 1200
         self.ball.x = 0
         self.ball.y = 0
+        self.ball.vx = 0
+        self.ball.vy = -6
         self.my_salah.set_location([50, 150])
         # self.pq.clear()
 
