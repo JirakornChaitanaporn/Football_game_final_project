@@ -1,6 +1,6 @@
 Title: Football deflecting game!
 
-Descriptioin: This project is a football game where you wwill be player as Liverpool against Manchestercity for 100 second real life(100 game minute).
+Description: This project is a football game where you wwill be player as Liverpool against Manchestercity for 100 second real life(100 game minute).
 
 How to install and play.
 1. Click on code button on the top right in this repo.
